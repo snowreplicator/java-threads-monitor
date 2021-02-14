@@ -1,7 +1,7 @@
 AUI.add(
     'java-threads-monitor-web-main',
     function (A) {
-        console.log('main js');
+
         var Lang = A.Lang;
 
         var isBoolean = Lang.isBoolean;
@@ -15,7 +15,7 @@ AUI.add(
         };
 
         var Util = Liferay.SnowReplicator.ThreadsMonitor.Util;
-        console.log('main js 2');
+
         var MainJS = A.Component.create(
             {
                 ATTRS: {
@@ -39,6 +39,10 @@ AUI.add(
                     groupId: {
                         setter: toInt,
                         validator: isNumber
+                    },
+
+                    threadsMonitorDataJsonString: {
+                        value: STR_BLANK
                     }
                 },
 
@@ -63,7 +67,6 @@ AUI.add(
 
                 prototype: {
                     initializer: function () {
-                        console.log('main js 3');
                         var instance = this;
                         instance.bindUI();
                         MainJS.register(instance);
@@ -81,91 +84,53 @@ AUI.add(
                     afterLoad: function () {
                         console.log('after load');
                         var instance = this;
-
-                        console.log('util = ' + Util);
-                        console.log('util.lang = ' + JSON.stringify(Util.getPaginatorLanguages()));
-                        instance.createAndFillThreadsTabulator(new Object());
-                    },
-
-                    // создать табулятор и заполнить его данными
-                    createAndFillThreadsTabulator: function (threadsParam) {
-                        var instance = this;
                         var namespace = instance.get('namespace');
 
-                        var columns = [
-                            {title: 'stolbec 1',  field: 'vid',           width: 300 },
-                            {title: 'stolbec 2',  field: 'regNum',        width: 110 },
-                            {title: 'stolbec 3',  field: 'regDate',       width: 110 },
-                        ];
+                        var threadsMonitorData = instance.parseThreadsMonitorDataFromJsonString(instance.get('threadsMonitorDataJsonString'));
+                        if (!threadsMonitorData) return;
 
-                        var langs = Util.getPaginatorLanguages();
-                        console.log('langs = ' + JSON.stringify(langs));
+                        var height = '500px';
+                        var tableData = threadsMonitorData.threadsData.length > 0 ? threadsMonitorData.threadsData : new Array();
+                        var columns =  threadsMonitorData.columnsData.columns;
 
-                        var tableData = new Object();
-                        //var tabulatorPlace = namespace + 'tabulatorPlace';
-                        var tabulatorPlace = '_ru_snowreplicator_java_threads_monitor_portlet_JavaThreadsMonitorPortlet_tabulatorPlace';
-
-                        var configuration = {
-                            tableData:    tableData || [],
-                            columns:      columns,
-                            //groupBy:      'category',
-                            langs:        langs,
-                            //locale:       '<%= LanguageUtil.get(request, "local-pagination") %>',
-                            pagePlace:    tabulatorPlace,
-                            //selectable:   true,
-                            selectable:   false,
-                            rowFormatter: function(row){
-                                var data = row.getData();
-                            },
-                            rowClick:     function (e, row) {
-                                var data = row.getData();
-                                console.log('row click');
-                            }
+                        var threadsMonitorDataConfiguration = {
+                            tabulatorPlace: namespace + 'tabulatorPlace',
+                            height: height,
+                            columns: columns,
+                            tableData: tableData
                         };
 
-                        Liferay.Loader.require('tabulator', function(tabulator) {
-                            instance.drawTabulator(configuration);
-                        });
+                        instance.drawTabulator(threadsMonitorDataConfiguration);
                     },
 
                     // нарисовать табулятор
-                    drawTabulator: function (configuration) {
+                    drawTabulator: function (threadsMonitorDataConfiguration) {
                         var instance = this;
+                        console.log('drawTabulator - threadsMonitorDataConfiguration = ' + JSON.stringify(threadsMonitorDataConfiguration));
 
-                        Liferay.SnowReplicator.ThreadsMonitor.Web.Tabulator(function (tabulator) {
-                            table = new tabulator('#' + configuration.pagePlace, {
-                                data:       configuration.tableData,
-                                //groupBy:    configuration.groupBy,
-                                layout:     'fitColumns',
-                                selectable: configuration.selectable,
-                                addRowPos:  'top',
-                                pagination: 'local',
-                                tooltips:   true,
-                                paginationSize: 10,
-                                paginationSizeSelector: [ 5, 10, 25, 50, 75 ],
-                                locale:     true,
-                                resizableColumns: true,
-                                columnHeaderVertAlign: configuration.columnHeaderVertAlign,
-                                dataSorting: function() {
-                                    xPosition = window.scrollX;
-                                    yPosition = window.scrollY;
-                                },
-                                renderComplete: function() {
-                                    window.scrollTo(xPosition, yPosition);
-                                    if (configuration.renderComplete) {
-                                        configuration.renderComplete.apply(this);
-                                    }
-                                },
-                                columns:  configuration.columns,
-                                langs:    configuration.langs,
-                                rowClick: configuration.rowClick,
-                                //rowDblClick: configuration.rowClick,
-                                keybindings: false
+                        Liferay.SnowReplicator.ThreadsMonitor.Tabulator(function (Tabulator) {
+
+                            var threadsMonitorDataTable = new Tabulator('#' + threadsMonitorDataConfiguration.tabulatorPlace, {
+                                height: threadsMonitorDataConfiguration.height,
+                                data: threadsMonitorDataConfiguration.tableData,
+                                columns: threadsMonitorDataConfiguration.columns
                             });
-                            table.setLocale(configuration.locale);
-                            //instance.assignments = table;
-                        });
 
+                            instance.set('threadsMonitorDataTable', threadsMonitorDataTable);
+                        });
+                    },
+
+                    // получить данные по потокам из сериализованной json строки
+                    parseThreadsMonitorDataFromJsonString: function (threadsMonitorDataJsonString) {
+                        try {
+                            var threadsMonitorData = JSON.parse(threadsMonitorDataJsonString);
+                            return threadsMonitorData;
+                        }
+                        catch (e) {
+                            console.error('main.js - parseThreadsMonitorDataFromJsonString() - parse exception: ' + e.name + ' ' + e.message);
+                            console.error('No threads data available');
+                        }
+                        return null;
                     },
 
                     // получить объект табулятора списка процессов
@@ -207,7 +172,6 @@ AUI.add(
             }
         );
 
-        console.log('main js 4');
         Liferay.SnowReplicator.ThreadsMonitor.Web.MainJS = MainJS;
     },
     '',

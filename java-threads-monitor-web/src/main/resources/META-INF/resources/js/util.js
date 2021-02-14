@@ -1,7 +1,6 @@
 AUI.add(
     'java-threads-monitor-web-util',
     function (A) {
-        console.log('111 util');
 
         var Util = {
 
@@ -31,7 +30,6 @@ AUI.add(
 
         };
 
-        console.log('2222 util');
         Liferay.SnowReplicator.ThreadsMonitor.Util = Util;
     },
     '',

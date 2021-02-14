@@ -11,7 +11,7 @@ import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
 public class JavaThreadsMonitorKeys {
 
     public static final String JAVA_THREADS_MONITOR_PORTLET = "ru_snowreplicator_java_threads_monitor_portlet_JavaThreadsMonitorPortlet";
-    public static final String JAVA_THREADS_MONITOR_NAMESPACE = "_java_threads_monitor_";
+    public static final String JAVA_THREADS_MONITOR_NAMESPACE = "_" + JAVA_THREADS_MONITOR_PORTLET + "_";
 
     public static ResourceBundle getResourceBundle(Locale locale) {
         ResourceBundleLoader resourceBundleLoader = ResourceBundleLoaderUtil.getResourceBundleLoaderByServletContextName("java-threads-monitor-web");

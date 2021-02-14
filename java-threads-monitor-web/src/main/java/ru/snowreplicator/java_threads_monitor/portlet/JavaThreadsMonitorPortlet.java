@@ -8,9 +8,9 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
+
 import ru.snowreplicator.java_threads_monitor.api.constants.JavaThreadsMonitorKeys;
 import ru.snowreplicator.java_threads_monitor.api.util.ThreadUtil;
 
@@ -26,7 +26,6 @@ import ru.snowreplicator.java_threads_monitor.api.util.ThreadUtil;
                 "javax.portlet.init-param.template-path=/",
                 "javax.portlet.init-param.view-template=/jsp/view.jsp",
                 "javax.portlet.name=" + JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_PORTLET,
-                "javax.portlet.default-namespace=" + JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_NAMESPACE,
                 "javax.portlet.resource-bundle=content.Language",
                 "javax.portlet.security-role-ref=power-user,user"
         },

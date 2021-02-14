@@ -1,11 +1,11 @@
 ;(function () {
-    console.log('pre 000');
+
     if (!Liferay.SnowReplicator) Liferay.SnowReplicator = new Object();
     if (!Liferay.SnowReplicator.ThreadsMonitor) Liferay.SnowReplicator.ThreadsMonitor = new Object();
     if (!Liferay.SnowReplicator.ThreadsMonitor.Web) Liferay.SnowReplicator.ThreadsMonitor.Web = new Object();
     if (!Liferay.SnowReplicator.ThreadsMonitor.Util) Liferay.SnowReplicator.ThreadsMonitor.Util = new Object();
-    if (!Liferay.SnowReplicator.ThreadsMonitor.Web.Tabulator) Liferay.SnowReplicator.ThreadsMonitor.Web.Tabulator = new Object();
-    console.log('pre 111');
+    if (!Liferay.SnowReplicator.ThreadsMonitor.Tabulator) Liferay.SnowReplicator.ThreadsMonitor.Tabulator = new Object();
+
 
     AUI().applyConfig({
         groups: {
@@ -14,11 +14,11 @@
                 base: MODULE_PATH + '/js/',
                 combine: true,
                 modules: {
-                    /*
+
                     'tabulator-css': {
                         path: 'tabulator/css/tabulator.min.css?v=20210214_1',
                         requires: []
-                    },*/
+                    },
 
                     'java-threads-monitor-web-util': {
                         path: 'util.js' + '?v=' + new Date().getTime(),
@@ -46,16 +46,16 @@
         }
     });
 
-        Liferay.Loader.addModule({
-            dependencies: [],
-            name: 'tabulator',
-            path: MODULE_PATH + '/js/tabulator/js/tabulator.min.js?v=20210214_1'
-        });
+    Liferay.Loader.addModule({
+        dependencies: [],
+        name: 'tabulator-js',
+        path: MODULE_PATH + '/js/tabulator/js/tabulator.min.js?v=20210214_1'
+    });
 
-        Liferay.SnowReplicator.ThreadsMonitor.Web.Tabulator = function (callback) {
-            AUI().use('tabulator-css', function () {
-                Liferay.Loader.require('tabulator', callback);
-            });
-        }
+    Liferay.SnowReplicator.ThreadsMonitor.Tabulator = function (callback) {
+        AUI().use('tabulator-css', function () {
+            Liferay.Loader.require('tabulator-js', callback);
+        });
+    }
 
 })();

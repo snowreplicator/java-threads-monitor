@@ -36,6 +36,7 @@
 <%@ page import="com.liferay.portal.kernel.util.WebKeys"%>
 
 <%@ page import="ru.snowreplicator.java_threads_monitor.api.constants.JavaThreadsMonitorKeys"%>
+<%@ page import="ru.snowreplicator.java_threads_monitor.portlet.ActionUtil" %>
 
 <liferay-frontend:defineObjects />
 <liferay-theme:defineObjects />
