@@ -6,9 +6,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 import ru.snowreplicator.java_threads_monitor.api.constants.JavaThreadsMonitorKeys;
+import ru.snowreplicator.java_threads_monitor.api.util.ThreadUtil;
 
 @Component(
         immediate = true,
@@ -30,5 +34,21 @@ import ru.snowreplicator.java_threads_monitor.api.constants.JavaThreadsMonitorKe
 )
 public class JavaThreadsMonitorPortlet extends MVCPortlet {
     private static Log _log = LogFactoryUtil.getLog(JavaThreadsMonitorPortlet.class);
+
+    @Activate
+    @Modified
+    protected void activate() {
+        _log.info("JavaThreadsMonitorPortlet module - activating");
+        ThreadUtil.runMonitorProcess();
+        _log.info("JavaThreadsMonitorPortlet module - activated");
+    }
+
+    @Deactivate
+    @Modified
+    protected void deactivate() {
+        _log.info("JavaThreadsMonitorPortlet module - deactivating");
+        ThreadUtil.stopMonitorProcess();
+        _log.info("JavaThreadsMonitorPortlet module - deactivated");
+    }
 
 }
