@@ -15,8 +15,8 @@ dependencies {
 }
 
 buildService {
-    apiDir = "../java-threads-monitor/src/main/java"
+    apiDir = "../java-threads-monitor-api/src/main/java"
     osgiModule = true
-    propsUtil = "ru.snowreplicator.java_threads_monitor.service.api.util.PropsUtil"
+    propsUtil = "ru.snowreplicator.java_threads_monitor.service.util.PropsUtil"
     databaseNameMaxLength = 100
 }
