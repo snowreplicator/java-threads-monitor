@@ -10,6 +10,9 @@
             Java Threads Monitor Portlet <br> <br>
             namespace = <%= renderResponse.getNamespace() %> <br> <br>
             JAVA_THREADS_MONITOR_NAMESPACE = <%= JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_NAMESPACE %> <br> <br>
+            <div class="btn-wrapper">
+                <aui:button type="button" name="loadThreadsData" value="load-threads-data" cssClass="load-threads-data-btn" />
+            </div>
         </div>
 
 

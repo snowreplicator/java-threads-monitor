@@ -78,6 +78,7 @@ AUI.add(
                         var contentBox = instance.get('contentBox');
                         var namespace = instance.get('namespace');
 
+                        contentBox.delegate('click',    instance._onClickLoadThreadsData,        '.load-threads-data-btn',             instance);
                     },
 
                     // действия после загрузки
@@ -133,21 +134,53 @@ AUI.add(
                         return null;
                     },
 
-                    // получить объект табулятора списка процессов
-                    getThreadsTabulator: function () {
+                    _onClickLoadThreadsData: function (event) {
+                        console.log('_onClickLoadThreadsData');
                         var instance = this;
-                        var namespace = instance.get('namespace');
-                        return Liferay.component('namespace' + 'threadsTabulator');
+                        instance.loadThreadsData();
+                    },
+
+                    // получить список процессов с сервера
+                    loadThreadsData: function () {
+                        console.log('loadThreadsData');
+                        var instance = this;
+                        var url = Liferay.PortletURL.createResourceURL();
+                        url.setPortletId(instance.get('portletId'));
+                        url.setResourceId('/threads-monitor-portlet/load-threads-data');
+                        url.setDoAsUserId(Liferay.ThemeDisplay.getDoAsUserIdEncoded());
+                        url.setParameter('p_p_auth', instance.get('p_p_auth'));
+
+                        var data = {};
+
+                        A.io.request(url.toString(), {
+                            dataType: 'json',
+                            data: data,
+                            on: {
+                                success: function (event) {
+                                    var responseData = this.get('responseData');
+                                    console.log('loadThreadsData - responseData = ' + JSON.stringify(responseData));
+                                    instance.replaceThreadsTabulatorData(responseData);
+                                }
+                            }
+                        });
+                    },
+
+                    // переустановка новых данных в табулятор
+                    replaceThreadsTabulatorData: function (tableData) {
+                        console.log('replaceThreadsTabulatorData - tableData = ' + JSON.stringify(tableData));
+                        var instance = this;
+                        var threadsMonitorDataTable = instance.get('threadsMonitorDataTable');
+                        threadsMonitorDataTable.replaceData(tableData);
                     },
 
                     // Получить строку табулятора
-                    getThreadsTabulatorRow: function (processId) {
+                    getThreadsTabulatorRow: function (id) {
                         var instance = this;
                         var tabulator = instance.getThreadsTabulator();
                         if (tabulator) {
-                            var tabulator = table.getRows();
+                            var rows = tabulator.getRows();
                             for (var i = 0; i < rows.length; i++) {
-                                if (rows[i].getData().processId == processId) {
+                                if (rows[i].getData().id == id) {
                                     return rows[i];
                                 }
                             }

@@ -1,10 +1,20 @@
 package ru.snowreplicator.java_threads_monitor.portlet;
 
-import javax.portlet.Portlet;
+import java.io.IOException;
 
+import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -12,7 +22,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 
 import ru.snowreplicator.java_threads_monitor.api.constants.JavaThreadsMonitorKeys;
-import ru.snowreplicator.java_threads_monitor.api.util.ThreadUtil;
 
 @Component(
         immediate = true,
@@ -48,6 +57,33 @@ public class JavaThreadsMonitorPortlet extends MVCPortlet {
         _log.info("JavaThreadsMonitorPortlet module - deactivating");
         //ThreadUtil.stopMonitorProcess();
         _log.info("JavaThreadsMonitorPortlet module - deactivated");
+    }
+
+    @Override
+    public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
+        String resourceID = resourceRequest.getResourceID();
+        _log.info("JavaThreadsMonitorPortlet - resourceID = " + resourceID); // !!!!! delete
+        try {
+            switch (resourceID) {
+                case "/threads-monitor-portlet/load-threads-data":
+                    loadThreadsData(resourceRequest, resourceResponse);
+                    break;
+
+                default:
+                    super.serveResource(resourceRequest, resourceResponse);
+            }
+        } catch (Exception e) {
+            JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+            jsonObject.put("exception", e.getClass().getName());
+            writeJSON(resourceRequest, resourceResponse, jsonObject);
+
+            throw new PortletException(e);
+        }
+    }
+
+    private void loadThreadsData(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException {
+        JSONArray threadsData = ActionUtil.getThreadsData();
+        writeJSON(resourceRequest, resourceResponse, threadsData);
     }
 
 }
