@@ -19,7 +19,7 @@ import ru.snowreplicator.java_threads_monitor.api.util.ThreadUtil;
         property = {
                 "com.liferay.portlet.display-category=category.snowreplicator",
                 "com.liferay.portlet.css-class-wrapper=snowreplicator-portlet",
-                "com.liferay.portlet.header-portlet-css=/css/main.css?ver_2021_02_14___1",
+                "com.liferay.portlet.header-portlet-css=/css/main.css?v=2021_02_14___2",
                 "com.liferay.portlet.instanceable=false",
                 "com.liferay.portlet.add-default-resource=true",
                 "javax.portlet.display-name=Java Threads Monitor Portlet",
@@ -39,7 +39,7 @@ public class JavaThreadsMonitorPortlet extends MVCPortlet {
     @Modified
     protected void activate() {
         _log.info("JavaThreadsMonitorPortlet module - activating");
-        ThreadUtil.runMonitorProcess();
+        //ThreadUtil.runMonitorProcess();
         _log.info("JavaThreadsMonitorPortlet module - activated");
     }
 
@@ -47,7 +47,7 @@ public class JavaThreadsMonitorPortlet extends MVCPortlet {
     @Modified
     protected void deactivate() {
         _log.info("JavaThreadsMonitorPortlet module - deactivating");
-        ThreadUtil.stopMonitorProcess();
+        //ThreadUtil.stopMonitorProcess();
         _log.info("JavaThreadsMonitorPortlet module - deactivated");
     }
 

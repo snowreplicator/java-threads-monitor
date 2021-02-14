@@ -1,0 +1,10 @@
+    <aui:script use="java-threads-monitor-web-main">
+        var MainJS = Liferay.SnowReplicator.ThreadsMonitor.Web.MainJS;
+        var mainJS = new MainJS({
+            id:                 '<portlet:namespace/>javaThreadsMonitorPortletWrapper',
+            p_p_auth:           '<%= AuthTokenUtil.getToken(request, themeDisplay.getPlid(), JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_PORTLET) %>',
+            namespace:          '<%= JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_NAMESPACE %>',
+            portletId:          '<%= JavaThreadsMonitorKeys.JAVA_THREADS_MONITOR_PORTLET %>',
+            groupId:             <%= themeDisplay.getScopeGroupId() %>
+        });
+    </aui:script>
