@@ -1,0 +1,11 @@
+Bundle-Name: java-threads-monitor-api
+Bundle-SymbolicName: java-threads-monitor-api
+Bundle-Version: 1.0.0
+Export-Package: \
+    ru.snowreplicator.java_threads_monitor.api.constants,\
+    ru.snowreplicator.java_threads_monitor.api.comparator,\
+    ru.snowreplicator.java_threads_monitor.exception,\
+    ru.snowreplicator.java_threads_monitor.model,\
+    ru.snowreplicator.java_threads_monitor.service,\
+    ru.snowreplicator.java_threads_monitor.service.persistence,\
+    ru.snowreplicator.java_threads_monitor.api.util
